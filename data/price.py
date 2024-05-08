@@ -7,39 +7,6 @@ from tqdm import tqdm
 from binance import Client
 
 
-@dataclass
-class KlineEntry:
-    open_time: datetime
-    open_price: float
-    high_price: float
-    low_price: float
-    end_price: float
-    volume: float
-    close_time: datetime
-    asset_volume: float
-    n_trades: int
-    taker_buy_base_asset_volume: float
-    taker_buy_quote_asset_volume: float
-    _: str  # ignore
-
-    def __post_init__(self):
-        STR_TO_FLOAT = [
-            "open_price",
-            "high_price",
-            "low_price",
-            "end_price",
-            "volume",
-            "asset_volume",
-            "taker_buy_base_asset_volume",
-            "taker_buy_quote_asset_volume",
-        ]
-        for attr in STR_TO_FLOAT:
-            setattr(self, attr, float(getattr(self, attr)))
-
-        self.open_time = datetime.fromtimestamp(self.open_time / 1000)
-        self.close_time = datetime.fromtimestamp(self.close_time / 1000)
-
-
 def get_price_data(
     symbol: str = "DOGEUSDT",
     *,
@@ -81,7 +48,7 @@ def get_kline_data(
     end_time: datetime,
     interval: str = "1m",
     verbose: bool = False,
-) -> list[KlineEntry]:
+) -> list["KlineEntry"]:
 
     result: list[KlineEntry] = []
     progress = tqdm() if verbose else None
@@ -110,7 +77,7 @@ def _call_kline_api(
     end_time: datetime,
     interval: str = "1m",
     limit: int = 1000,
-) -> list[KlineEntry]:
+) -> list["KlineEntry"]:
 
     response = Client().get_klines(
         symbol=symbol,
@@ -120,6 +87,39 @@ def _call_kline_api(
         limit=limit,
     )
     return [KlineEntry(*entry) for entry in response]
+
+
+@dataclass
+class KlineEntry:
+    open_time: datetime
+    open_price: float
+    high_price: float
+    low_price: float
+    end_price: float
+    volume: float
+    close_time: datetime
+    asset_volume: float
+    n_trades: int
+    taker_buy_base_asset_volume: float
+    taker_buy_quote_asset_volume: float
+    _: str  # ignore
+
+    def __post_init__(self):
+        STR_TO_FLOAT = [
+            "open_price",
+            "high_price",
+            "low_price",
+            "end_price",
+            "volume",
+            "asset_volume",
+            "taker_buy_base_asset_volume",
+            "taker_buy_quote_asset_volume",
+        ]
+        for attr in STR_TO_FLOAT:
+            setattr(self, attr, float(getattr(self, attr)))
+
+        self.open_time = datetime.fromtimestamp(self.open_time / 1000)
+        self.close_time = datetime.fromtimestamp(self.close_time / 1000)
 
 
 if __name__ == "__main__":
