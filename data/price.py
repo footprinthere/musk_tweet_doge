@@ -13,6 +13,7 @@ def get_price_data(
     start_time: datetime,
     end_time: datetime,
     interval: str = "1m",
+    include_volume: bool = False,
     verbose: bool = False,
     file_path: Optional[str] = None,
 ) -> pd.DataFrame:
@@ -27,12 +28,13 @@ def get_price_data(
 
     df: list[dict[str, Any]] = []
     for entry in data:
-        df.append(
-            {
-                "date": entry.open_time.strftime("%Y-%m-%d %H:%M:%S"),
-                f"{symbol}": entry.open_price,
-            }
-        )
+        parsed = {
+            "date": entry.open_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            f"{symbol}": entry.open_price,
+        }
+        if include_volume:
+            parsed[f"{symbol}_volume"] = entry.volume
+        df.append(parsed)
 
     pd_df = pd.DataFrame(df)
     if file_path is not None:
@@ -78,6 +80,7 @@ def _call_kline_api(
     interval: str = "1m",
     limit: int = 1000,
 ) -> list["KlineEntry"]:
+    # request/response format: https://goldfishman.tistory.com/70
 
     response = Client().get_klines(
         symbol=symbol,
