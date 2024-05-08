@@ -1,0 +1,6 @@
+numpy
+tqdm
+pandas
+python-binance
+eventstudy
+ipykernel
