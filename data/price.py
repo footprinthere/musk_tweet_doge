@@ -1,6 +1,8 @@
+from typing import Any, Optional
 from datetime import datetime
 from dataclasses import dataclass
 
+import pandas as pd
 from tqdm import tqdm
 from binance import Client
 
@@ -8,10 +10,10 @@ from binance import Client
 @dataclass
 class KlineEntry:
     open_time: datetime
-    open_price: int
-    high_price: int
-    low_price: int
-    end_price: int
+    open_price: float
+    high_price: float
+    low_price: float
+    end_price: float
     volume: float
     close_time: datetime
     asset_volume: float
@@ -21,16 +23,55 @@ class KlineEntry:
     _: str  # ignore
 
     def __post_init__(self):
+        STR_TO_FLOAT = [
+            "open_price",
+            "high_price",
+            "low_price",
+            "end_price",
+            "volume",
+            "asset_volume",
+            "taker_buy_base_asset_volume",
+            "taker_buy_quote_asset_volume",
+        ]
+        for attr in STR_TO_FLOAT:
+            setattr(self, attr, float(getattr(self, attr)))
+
         self.open_time = datetime.fromtimestamp(self.open_time / 1000)
-        self.open_price = int(self.open_price)
-        self.high_price = int(self.high_price)
-        self.low_price = int(self.low_price)
-        self.end_price = int(self.end_price)
         self.close_time = datetime.fromtimestamp(self.close_time / 1000)
-        self.volume = float(self.volume)
-        self.asset_volume = float(self.asset_volume)
-        self.taker_buy_base_asset_volume = float(self.taker_buy_base_asset_volume)
-        self.taker_buy_quote_asset_volume = float(self.taker_buy_quote_asset_volume)
+
+
+def get_price_data(
+    symbol: str = "DOGEUSDT",
+    *,
+    start_time: datetime,
+    end_time: datetime,
+    interval: str = "1m",
+    verbose: bool = False,
+    file_path: Optional[str] = None,
+) -> pd.DataFrame:
+
+    data = get_kline_data(
+        symbol=symbol,
+        start_time=start_time,
+        end_time=end_time,
+        interval=interval,
+        verbose=verbose,
+    )
+
+    df: list[dict[str, Any]] = []
+    for entry in data:
+        df.append(
+            {
+                "date": entry.open_time.strftime("%Y-%m-%d %H:%M:%S"),
+                f"{symbol}": entry.open_price,
+            }
+        )
+
+    pd_df = pd.DataFrame(df)
+    if file_path is not None:
+        pd_df.to_csv(file_path, index=False)
+
+    return pd_df
 
 
 def get_kline_data(
