@@ -46,7 +46,7 @@ class PriceAggregator(Aggregator):
         data_time_delta: timedelta,
         event_window: tuple[int, int],
         estimation_window: tuple[int, int],
-        data_file: Optional[str] = None,  # save data as file
+        data_save_path: Optional[str] = None,
         result_file: Optional[str] = None,
         verbose: bool = False,
     ) -> None:
@@ -55,7 +55,7 @@ class PriceAggregator(Aggregator):
         data = get_price_data(
             start_time=event_time - data_time_delta,
             end_time=event_time + data_time_delta,
-            file_path=data_file,
+            file_path=data_save_path,
             verbose=verbose,
         )
         single_import_returns(
