@@ -26,7 +26,7 @@ class PriceAggregator(Aggregator):
             if "{}" not in result_file_format:
                 raise ValueError("result_file_format should include a format `{}`")
 
-        for idx, event_time in tqdm(enumerate(event_times)):
+        for idx, event_time in enumerate(tqdm(event_times)):
             self.create_price_event(
                 event_time=event_time,
                 data_time_delta=data_time_delta,
