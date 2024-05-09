@@ -10,6 +10,13 @@ from data.price import get_price_data
 
 class PriceAggregator(Aggregator):
 
+    def __init__(self):
+        super().__init__()
+        self._column_name = "DOGEUSDT"
+
+    def use_column(self, column_name: str) -> None:
+        self._column_name = column_name
+
     def create_multiple_price_events(
         self,
         *,
@@ -65,7 +72,7 @@ class PriceAggregator(Aggregator):
         )
 
         self._add_event(
-            column_name="DOGEUSDT",
+            column_name=self._column_name,
             event_time=event_time,
             event_window=event_window,
             estimation_window=estimation_window,
