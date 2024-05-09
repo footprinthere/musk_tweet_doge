@@ -10,6 +10,9 @@ class Aggregator:
     def __init__(self):
         self.events: list[Single] = []
 
+    def reset(self) -> None:
+        self.events.clear()
+
     def create_event(
         self,
         *,
