@@ -121,8 +121,8 @@ class KlineEntry:
         for attr in STR_TO_FLOAT:
             setattr(self, attr, float(getattr(self, attr)))
 
-        self.open_time = datetime.fromtimestamp(self.open_time / 1000)
-        self.close_time = datetime.fromtimestamp(self.close_time / 1000)
+        self.open_time = datetime.fromtimestamp(self.open_time / 1000)  # type: ignore
+        self.close_time = datetime.fromtimestamp(self.close_time / 1000)  # type: ignore
 
 
 if __name__ == "__main__":
