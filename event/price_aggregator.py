@@ -17,7 +17,7 @@ class PriceAggregator(Aggregator):
     def use_column(self, column_name: str) -> None:
         self._column_name = column_name
 
-    def create_multiple_price_events(
+    def create_multiple_events(
         self,
         *,
         event_times: list[datetime],
