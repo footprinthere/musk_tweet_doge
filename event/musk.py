@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 MUSK_TWEET_TIMES = [
@@ -22,6 +22,11 @@ MUSK_TWEET_TIMES = [
     datetime(2021, 4, 28, 8, 20, 0),  # 30
 ]
 
+# Revise timezone to GMT
+timezone_delta = timedelta(hours=-1)
+MUSK_TWEET_TIMES = [time + timezone_delta for time in MUSK_TWEET_TIMES]
+
 
 if __name__ == "__main__":
     print(len(MUSK_TWEET_TIMES))
+    print(*MUSK_TWEET_TIMES, sep="\n")
