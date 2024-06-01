@@ -2,6 +2,7 @@ from typing import Optional
 from datetime import datetime
 
 import numpy as np
+from pandas import DataFrame
 from eventstudy import Single, Multiple
 from eventstudy.excelExporter import write_Single, write_Multiple
 
@@ -41,9 +42,15 @@ class Aggregator:
             result_file=result_file,
         )
 
-    def aggregate(self, result_file: str) -> None:
+    def aggregate(
+        self,
+        result_file: str,
+        asterisks: bool = True,
+        rounding: int = 3,
+    ) -> DataFrame:
         multiple = Multiple(self.events)
         write_Multiple(multiple, result_file)
+        return multiple.results(asterisks=asterisks, decimals=rounding)
 
     def _add_event(
         self,
