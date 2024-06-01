@@ -17,7 +17,7 @@ MUSK_TWEET_TIMES = [
     datetime(2021, 3, 14, 0, 40, 0),  # 24
     datetime(2021, 4, 1, 12, 25, 0),  # 26
     datetime(2021, 4, 9, 9, 32, 0),  # 27
-    datetime(2021, 4, 15, 6, 33, 0),  # 28
+    datetime(2021, 4, 15, 5, 33, 0),  # 28 - Ante said "6:33:00", but looks like a typo
     datetime(2021, 4, 16, 19, 1, 0),  # 29
     datetime(2021, 4, 28, 8, 20, 0),  # 30
 ]
