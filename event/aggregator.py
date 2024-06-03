@@ -65,7 +65,7 @@ class Aggregator:
             event_date=np.datetime64(event_time),
             event_window=event_window,
             estimation_size=estimation_window[1] - estimation_window[0],
-            buffer_size=-1 * estimation_window[1],
+            buffer_size=event_window[0] - estimation_window[1],
         )
         self.events.append(event)
 
