@@ -1,10 +1,9 @@
-from typing import Optional
 from datetime import datetime
 
 import numpy as np
 from pandas import DataFrame
 from eventstudy import Single, Multiple
-from eventstudy.excelExporter import write_Single, write_Multiple
+from eventstudy.excelExporter import write_Multiple
 
 
 class Aggregator:
@@ -23,23 +22,22 @@ class Aggregator:
         event_time: datetime,
         event_window: tuple[int, int],
         estimation_window: tuple[int, int],
-        result_file: Optional[str] = None,
-    ) -> None:
+        log_return: bool = True,
+    ) -> DataFrame:
         Aggregator._validate_window(event_window, estimation_window)
 
         Single.import_returns(
             path=data_file,
             is_price=is_price,
-            log_return=True,
+            log_return=log_return,
             date_format="%Y-%m-%dT%H:%M:%S",
         )
 
-        self._add_event(
+        return self._add_event(
             column_name=column_name,
             event_time=event_time,
             event_window=event_window,
             estimation_window=estimation_window,
-            result_file=result_file,
         )
 
     def aggregate(
@@ -58,8 +56,7 @@ class Aggregator:
         event_time: datetime,
         event_window: tuple[int, int],
         estimation_window: tuple[int, int],
-        result_file: Optional[str],
-    ) -> None:
+    ) -> DataFrame:
         event = Single.constant_mean(
             security_ticker=column_name,
             event_date=np.datetime64(event_time),
@@ -69,8 +66,7 @@ class Aggregator:
         )
         self.events.append(event)
 
-        if result_file is not None:
-            write_Single(event, result_file)
+        return event.results(asterisks=False, decimals=8)
 
     @staticmethod
     def _validate_window(

@@ -23,9 +23,10 @@ class PriceAggregator(Aggregator):
         event_times: list[datetime],
         data_files: Optional[list[str]] = None,
         data_time_delta: Optional[timedelta] = None,
+        is_price: bool = True,
         event_window: tuple[int, int],
         estimation_window: tuple[int, int],
-        result_file_format: Optional[str] = None,
+        result_file_format: Optional[str] = None,  # .csv
     ) -> None:
         """
         * Either `data_files` or `data_time_delta` should be specified
@@ -40,19 +41,16 @@ class PriceAggregator(Aggregator):
             for idx, (event_time, data_file) in enumerate(
                 tqdm(list(zip(event_times, data_files)))
             ):
-                self.create_event(
+                result = self.create_event(
                     data_file=data_file,
                     column_name=self._column_name,
-                    is_price=True,
+                    is_price=is_price,
                     event_time=event_time,
                     event_window=event_window,
                     estimation_window=estimation_window,
-                    result_file=(
-                        None
-                        if result_file_format is None
-                        else result_file_format.format(idx)
-                    ),
                 )
+                if result_file_format is not None:
+                    result.to_csv(result_file_format.format(idx), index=True)
             return
 
         if data_time_delta is None:
@@ -66,11 +64,6 @@ class PriceAggregator(Aggregator):
                 data_time_delta=data_time_delta,
                 event_window=event_window,
                 estimation_window=estimation_window,
-                result_file=(
-                    None
-                    if result_file_format is None
-                    else result_file_format.format(idx)
-                ),
             )
 
     def create_price_event(
@@ -81,7 +74,6 @@ class PriceAggregator(Aggregator):
         event_window: tuple[int, int],
         estimation_window: tuple[int, int],
         data_save_path: Optional[str] = None,
-        result_file: Optional[str] = None,
         verbose: bool = False,
     ) -> None:
         Aggregator._validate_window(event_window, estimation_window)
@@ -103,5 +95,4 @@ class PriceAggregator(Aggregator):
             event_time=event_time,
             event_window=event_window,
             estimation_window=estimation_window,
-            result_file=result_file,
         )

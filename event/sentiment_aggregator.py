@@ -22,7 +22,7 @@ class SentimentAggregator(Aggregator):
         data_files: list[str],
         event_window: tuple[int, int],
         estimation_window: tuple[int, int],
-        result_file_format: Optional[str] = None,
+        result_file_format: Optional[str] = None,  # .csv
     ) -> None:
         if result_file_format is not None:
             if "{}" not in result_file_format:
@@ -31,16 +31,13 @@ class SentimentAggregator(Aggregator):
         for idx, (event_time, data_file) in enumerate(
             tqdm(list(zip(event_times, data_files)))
         ):
-            self.create_event(
+            result = self.create_event(
                 data_file=data_file,
                 column_name=self._column_name,
                 is_price=False,  # Specified column must include calculated returns
                 event_time=event_time,
                 event_window=event_window,
                 estimation_window=estimation_window,
-                result_file=(
-                    None
-                    if result_file_format is None
-                    else result_file_format.format(idx)
-                ),
             )
+            if result_file_format is not None:
+                result.to_csv(result_file_format.format(idx), index=True)
