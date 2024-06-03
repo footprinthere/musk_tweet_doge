@@ -10,6 +10,7 @@ class ColumnName(str, Enum):
     N_POSITIVE = "n_positive"
     N_NEGATIVE = "n_negative"
     N_TOTAL = "n_total"
+    POS_NEG_DIFF = "pos_neg_diff"
 
     BULLISHNESS = "bullishness"
     POSITIVE_RATIO = "positive_ratio"
@@ -22,6 +23,14 @@ def add_bullishness(data: pd.DataFrame) -> pd.DataFrame:
     # bullishness = log((1+n_pos) / (1+n_neg))
     data[ColumnName.BULLISHNESS] = np.log(
         (1 + data[ColumnName.N_POSITIVE]) / (1 + data[ColumnName.N_NEGATIVE])
+    )
+    return data
+
+
+def add_pos_neg_diff(data: pd.DataFrame) -> pd.DataFrame:
+    # pos_neg_diff = n_pos - n_neg
+    data[ColumnName.POS_NEG_DIFF] = (
+        data[ColumnName.N_POSITIVE] - data[ColumnName.N_NEGATIVE]
     )
     return data
 
