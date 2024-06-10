@@ -22,6 +22,25 @@ MUSK_TWEET_TIMES = [
     datetime(2021, 4, 28, 8, 20, 0),  # 30
 ]
 
+# Include all DOGE events in Ante
+MUSK_TWEET_TIMES += [
+    datetime(2020, 1, 10, 7, 53, 0),  # 3
+    datetime(2020, 12, 20, 10, 30, 0),  # 5
+    datetime(2020, 12, 25, 17, 47, 0),  # 6
+    datetime(2021, 5, 7, 18, 24, 0),  # 31
+    datetime(2021, 5, 10, 0, 41, 0),  # 32
+    datetime(2021, 5, 11, 10, 13, 0),  # 33
+    datetime(2021, 5, 14, 0, 45, 0),  # 36
+    datetime(2021, 5, 20, 12, 41, 0),  # 38
+    datetime(2021, 5, 24, 21, 49, 0),  # 40
+    datetime(2021, 6, 2, 9, 5, 0),  # 41
+    datetime(2021, 6, 25, 4, 10, 0),  # 43
+    datetime(2021, 6, 25, 13, 3, 0),  # 44
+    datetime(2021, 7, 1, 10, 43, 0),  # 45
+    datetime(2021, 7, 2, 15, 20, 0),  # 46
+    datetime(2021, 7, 25, 6, 23, 0),  # 47
+]
+
 # Revise timezone to GMT
 timezone_delta = timedelta(hours=-1)
 MUSK_TWEET_TIMES = [time + timezone_delta for time in MUSK_TWEET_TIMES]
